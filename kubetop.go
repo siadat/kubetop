@@ -47,9 +47,9 @@ func main() {
 	}
 
 	configFilepath := os.Getenv("KUBECONFIG")
-    if len(configFilepath) == 0 {
-        configFilepath = filepath.Join(usr.HomeDir, ".kube", "config")
-    }
+	if len(configFilepath) == 0 {
+		configFilepath = filepath.Join(usr.HomeDir, ".kube", "config")
+	}
 
 	fmt.Printf("Using %s\n", configFilepath)
 	config, err := clientcmd.BuildConfigFromFlags("", configFilepath)

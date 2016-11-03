@@ -62,10 +62,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var ch = make(chan Rows)
 	var rows Rows
+	var ch chan Rows
 	for {
 		rows = make(Rows, 0)
+		ch = make(chan Rows)
+
 		go func() {
 			for r := range ch {
 				rows = append(rows, r...)
@@ -79,6 +81,7 @@ func main() {
 		go func() { defer wg.Done(); getDeployments(ch, clientset) }()
 		go func() { defer wg.Done(); getPods(ch, clientset) }()
 		wg.Wait()
+		close(ch)
 
 		clear()
 		sort.Sort(rows)

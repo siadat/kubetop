@@ -12,4 +12,5 @@ View Kubernetes nodes, pods, services, and deployments in a glance.
 
     kubetop
 
-kubetop loads configs from ~/.kube/config
+This command loads Kubernetes configs from the directory specified by `$KUBECONFIG` environment variable.
+Otherwise it defaults to `$HOME/.kube/config`.

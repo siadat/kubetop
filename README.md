@@ -10,7 +10,7 @@ View Kubernetes nodes, pods, services, and deployments in a glance.
 
 ## Usage
 
-    kubetop
+    kubetop [-namespace NAMESPACE]
 
 This command loads Kubernetes configs from the directory specified by `$KUBECONFIG` environment variable.
 Otherwise it defaults to `$HOME/.kube/config`.

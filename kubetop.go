@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -26,6 +27,8 @@ var (
 	colorService    = color.New(color.FgBlue).SprintFunc()
 	colorDeployment = color.New(color.FgMagenta).SprintFunc()
 	colorFailed     = color.New(color.FgRed).SprintFunc()
+
+	flagNamespace = flag.String("namespace", "", "filter resources by namespace")
 )
 
 type (
@@ -41,6 +44,9 @@ func (r Rows) Less(i, j int) bool {
 
 func main() {
 	log.SetFlags(log.Lshortfile)
+
+	flag.Parse()
+
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
@@ -105,6 +111,9 @@ func getNodes(ch chan Rows, clientset *kubernetes.Clientset) {
 
 	var rows Rows
 	for _, node := range nodes.Items {
+		if *flagNamespace != "" && node.ObjectMeta.Namespace != *flagNamespace {
+			continue
+		}
 		var statuses []string
 		if len(node.Status.Phase) > 0 {
 			statuses = append(statuses, string(node.Status.Phase))
@@ -148,6 +157,9 @@ func getServices(ch chan Rows, clientset *kubernetes.Clientset) {
 		if service.ObjectMeta.Namespace == "kube-system" {
 			continue
 		}
+		if *flagNamespace != "" && service.ObjectMeta.Namespace != *flagNamespace {
+			continue
+		}
 		var statuses []string
 		for _, c := range service.Status.LoadBalancer.Ingress {
 			statuses = append(statuses, fmt.Sprintf("%s %s", c.IP, c.Hostname))
@@ -186,6 +198,9 @@ func getDeployments(ch chan Rows, clientset *kubernetes.Clientset) {
 		if dep.ObjectMeta.Namespace == "kube-system" {
 			continue
 		}
+		if *flagNamespace != "" && dep.ObjectMeta.Namespace != *flagNamespace {
+			continue
+		}
 		var statuses []string
 		for _, c := range dep.Status.Conditions {
 			if c.Status != "True" {
@@ -219,6 +234,9 @@ func getPods(ch chan Rows, clientset *kubernetes.Clientset) {
 	var rows Rows
 	for _, pod := range pods.Items {
 		if pod.ObjectMeta.Namespace == "kube-system" {
+			continue
+		}
+		if *flagNamespace != "" && pod.ObjectMeta.Namespace != *flagNamespace {
 			continue
 		}
 		var statuses []string

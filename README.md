@@ -6,7 +6,9 @@ View Kubernetes nodes, pods, services, and deployments in a glance.
 
 ## Install
 
-    go get github.com/siadat/kubetop
+* Clone this repo.
+* To install dependencies, [install Glide](https://glide.sh), then do `glide install`.
+* `go install .`
 
 ## Usage
 

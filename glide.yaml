@@ -1,0 +1,11 @@
+package: github.com/siadat/kubetop
+import:
+- package: github.com/fatih/color
+  version: ~1.4.0
+- package: github.com/olekukonko/tablewriter
+- package: k8s.io/client-go
+  version: 24a02a6d7d2c9a21b12a3eb35c71c784e63825f4
+  subpackages:
+  - kubernetes
+  - pkg/api/v1
+  - tools/clientcmd
